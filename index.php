@@ -1,5 +1,5 @@
 <?php
-//panggil koneksi
+//panggil koneksi database
 include "koneksi.php";
 ?>
 
@@ -24,19 +24,22 @@ include "koneksi.php";
                 Data Mahasiswa
             </div>
             <div class="card-body">
+
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalTambah">
                     Tambah Data
                 </button>
+
                 <table class="table table-bordered table-striped table-hover">
                     <tr>
                         <th>No</th>
                         <th>Nim</th>
                         <th>Nama</th>
-                        <th>alamat</th>
-                        <th>jurusan</th>
+                        <th>Alamat</th>
+                        <th>Jurusan</th>
                         <th>Action</th>
                     </tr>
+
                     <?php
                     $no = 1;
                     $tampil = mysqli_query($koneksi, "select * from mahasiswa ORDER BY id DESC");
@@ -48,12 +51,13 @@ include "koneksi.php";
                             <td><?= $data['nama'] ?></td>
                             <td><?= $data['alamat'] ?></td>
                             <td><?= $data['prodi'] ?></td>
+
                             <td>
-                                <a href="#" class="btn btn-warning">Ubah</a>
-                                <a href="#" class="btn btn-danger">Delete</a>
+                                <a href="#" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editdata<?= $no ?>">Ubah</a>
+                                <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deletedata<?= $no ?>">Delete</a>
                             </td>
                         </tr>
-                        <!--  Awal Update -->
+                        <!--  Awal update -->
                         <div class="modal fade" id="editdata<?= $no ?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -61,25 +65,26 @@ include "koneksi.php";
                                         <h1 class="modal-title fs-5" id="staticBackdropLabel">Form Data Mahasiswa</h1>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                    <form action="tambah.php" method="POST">
+                                    <form action="update.php" method="POST">
+                                        <input type="hidden" name="id" value="<?= $data['id'] ?>">
                                         <div class="modal-body">
                                             <div class="mb-3">
                                                 <label class="form-label">NIM</label>
-                                                <input type="text" class="form-control" name="tnim" value="<?= $data['nim']?>" placeholder="Masukkan nim anda">
+                                                <input type="text" class="form-control" name="tnim" value="<?= $data['nim'] ?>" placeholder="Masukkan nim anda">
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Nama Lengkap</label>
-                                                <input type="text" class="form-control" name="tnama" value="<?= $data['nama']?>" placeholder="Masukkan nama lengkap anda">
+                                                <input type="text" class="form-control" name="tnama" value="<?= $data['nama'] ?>" placeholder="Masukkan nama lengkap anda">
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Alamat</label>
-                                                <textarea class="form-control" name="talamat" rows="3"><?= $data['nama']?></textarea>
+                                                <textarea class="form-control" name="talamat" rows="3"><?= $data['alamat'] ?></textarea>
                                             </div>
-                                            
+
                                             <div class="mb-3">
                                                 <label class="form-label">Prodi</label>
                                                 <select name="tprodi" class="form-select">
-                                                    <option></option>
+                                                    <option value="<?= $data['prodi'] ?>"><?= $data['prodi'] ?></option>
                                                     <option value="S1 Informatika">S1 Informatika</option>
                                                     <option value="S1 Manajemen">S1 Manajemen</option>
                                                     <option value="S1 Agama Kristen">S1 Agama Kristen</option>
@@ -87,23 +92,45 @@ include "koneksi.php";
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="submit" class="btn btn-primary" name="bsimpan">Simpan</button>
+                                            <button type="submit" class="btn btn-primary" name="bubah">Ubah</button>
                                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Keluar</button>
                                         </div>
                                     </form>
                                 </div>
                             </div>
                         </div>
-</body>
+                        <!--  akhir update -->
 
-</html>
-<!--Akhir Update-->
+                        <!--  Awal Delete -->
+                        <div class="modal fade" id="deletedata<?= $no ?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Form Data Mahasiswa</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <form action="delete.php" method="POST">
+                                        <input type="hidden" name="id" value="<?= $data['id'] ?>">
+                                        <div class="modal-body">
+                                            <h3 class="text-center">Apakah anda yakin ingin menghapus data ini? <br>
+                                                <span class="text-center"><?= $data['nim'] ?> - <?= $data['nama'] ?></span>
+                                            </h3>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary" name="bhapus">Hapus</button>
+                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Keluar</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!--  akhir Delete -->
 
-<?php endwhile; ?>
-</table>
-</div>
-</div>
-</div>
+                    <?php endwhile; ?>
+                </table>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
@@ -129,6 +156,7 @@ include "koneksi.php";
                         <label class="form-label">Alamat</label>
                         <textarea class="form-control" name="talamat" rows="3"></textarea>
                     </div>
+
                     <div class="mb-3">
                         <label class="form-label">Prodi</label>
                         <select name="tprodi" class="form-select">
@@ -147,6 +175,4 @@ include "koneksi.php";
         </div>
     </div>
 </div>
-</body>
-
-</html>
+<!--  akhir Modal -->
